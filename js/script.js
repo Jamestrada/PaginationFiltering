@@ -1,62 +1,77 @@
-/******************************************
-Treehouse Techdegree:
-FSJS project 2 - List Filter and Pagination
+/**********************************************
+List Pagination and Filtering
 Developed by: James Estrada 
 
-Search and display students through pagination
-******************************************/
+Search and display students through pagination.
+***********************************************/
 
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
+'use strict';
 const studentList = document.querySelectorAll('.student-item');
 const itemsPerPage = 10;
 
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
+/**
+ * Hides all students in the list except for ten on a given page.
+ * 
+ * @param {NodeList} list - The list of students.
+ * @param {number} page  - The page number.
+ */
 const showPage = (list, page) => {
-   start = (page * itemsPerPage) - itemsPerPage;
-   end = page * itemsPerPage;
+   const start = (page * itemsPerPage) - itemsPerPage;
+   const end = page * itemsPerPage;
 
-   for (let i = start; i < end; i += 1) {
-      // Display students of that page as long as there are students.
-      if (list[i]) {
-         console.log(list[i]);
+   for (let i = 0; i < list.length; i += 1) {
+      if (i >= start && i < end){
+         // Display students of that page as long as there are students.
+         if (list[i]) {
+            list[i].style.display = '';
+         }
+      } else {
+         list[i].style.display = 'none';
       }
    }
 };
 
-showPage(studentList, 6);
+showPage(studentList, 1);
 
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
-const appendPageLinks = (list) => {
-   const div = document.querySelector('.pagination');
+/**
+ * Creates and appends functioning pagination buttons.
+ * 
+ * @param {NodeList} list - The list of students.
+ */
+const appendPageLinks = list => {
+   const numberOfStudents = list.length;
+   // Create a div with class name 'pagination' and append it to the div with class name 'page'
+   const pageDiv = document.querySelector('div.page');
+   const paginationDiv = document.createElement('div');
+   paginationDiv.className = 'pagination';
+   pageDiv.appendChild(paginationDiv);
+
+   // Create ul element with li elements depending on #of students and append it to new div
+   const ul = document.createElement('ul');
+   const pages = Math.ceil(numberOfStudents / itemsPerPage);
+   for (let i = 1; i <= pages; i++) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.setAttribute('href', '#');
+      a.textContent = i;
+      li.appendChild(a);
+      ul.append(li);
+   }
+   ul.children[0].firstElementChild.className = 'active'; // Set the class name 'active' to the <a> tag of the first li
+   paginationDiv.appendChild(ul);
+
+   // Set up an event listener on every <a> tag inside the <li>s of the ul.
+   const lis = ul.children;
+   for (const li of lis) {
+      const a = li.firstElementChild;
+      a.addEventListener('click', () => {
+         for (let i = 0; i < lis.length; i++) {
+            lis[i].firstElementChild.classList.remove('active');
+         }
+         a.className = 'active';
+         showPage(list, a.textContent);
+      });
+   }
 };
 
-
-
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
+appendPageLinks(studentList);
