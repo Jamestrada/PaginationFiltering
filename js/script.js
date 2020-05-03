@@ -2,7 +2,7 @@
 List Pagination and Filtering
 Developed by: James Estrada 
 
-Search and display students through pagination.
+Display students through pagination.
 ***********************************************/
 
 'use strict';
@@ -31,14 +31,13 @@ const showPage = (list, page) => {
    }
 };
 
-showPage(studentList, 1);
-
 /**
  * Creates and appends functioning pagination buttons.
  * 
  * @param {NodeList} list - The list of students.
  */
 const appendPageLinks = list => {
+   showPage(list, 1);
    const numberOfStudents = list.length;
    // Create a div with class name 'pagination' and append it to the div with class name 'page'
    const pageDiv = document.querySelector('div.page');
@@ -57,7 +56,9 @@ const appendPageLinks = list => {
       li.appendChild(a);
       ul.append(li);
    }
-   ul.children[0].firstElementChild.className = 'active'; // Set the class name 'active' to the <a> tag of the first li
+   if (ul.children[0]) {
+      ul.children[0].firstElementChild.className = 'active'; // Set the class name 'active' to the <a> tag of the first li
+   }
    paginationDiv.appendChild(ul);
 
    // Set up an event listener on every <a> tag inside the <li>s of the ul.
