@@ -117,3 +117,13 @@ body{
       background-color: #4ba6c3;
       color: #fff;
     }
+
+.not-found {
+  text-align: center;
+}
+.not-found h2{
+  font-weight: bold;
+}
+.not-found p{
+  color: #A9A9A9;
+}
